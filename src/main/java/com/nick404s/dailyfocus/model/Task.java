@@ -1,4 +1,4 @@
-package com.nick404s.dailyfocus.entity;
+package com.nick404s.dailyfocus.model;
 
 import jakarta.persistence.*;
 
