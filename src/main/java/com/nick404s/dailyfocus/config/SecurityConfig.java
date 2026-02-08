@@ -66,7 +66,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSec) throws Exception {
         httpSec.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers( // permit swagger endpoints
+                        .requestMatchers( "/api/auth/**", // permit all auth routes
+                                // permit swagger endpoints
                                 "/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**",
                                 "/docs").permitAll());
