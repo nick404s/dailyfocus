@@ -1,6 +1,6 @@
 package com.nick404s.dailyfocus.controller;
 
-import com.nick404s.dailyfocus.dto.RegisterRequest;
+import com.nick404s.dailyfocus.dto.request.RegisterRequest;
 import com.nick404s.dailyfocus.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
