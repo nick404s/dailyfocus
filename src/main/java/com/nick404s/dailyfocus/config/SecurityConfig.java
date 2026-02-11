@@ -70,7 +70,9 @@ public class SecurityConfig {
                                 // permit swagger endpoints
                                 "/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**",
-                                "/docs").permitAll());
+                                "/docs").permitAll()
+                        .anyRequest().authenticated() // for all other requests to allow only work with the jwt auth
+        );
 
         // disable csrf. jwt is stateless
         httpSec.csrf(csrf -> csrf.disable() );

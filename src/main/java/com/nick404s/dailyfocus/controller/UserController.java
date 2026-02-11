@@ -1,6 +1,6 @@
 package com.nick404s.dailyfocus.controller;
 
-import com.nick404s.dailyfocus.model.User;
+import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public User getUserInfo(){
+    public UserResponse getUserInfo(){
         return userService.getUserInfo();
     }
 }
