@@ -72,7 +72,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**", "/webjars/**",
                                 "/docs").permitAll());
 
-        // disable csrf
+        // disable csrf. jwt is stateless
         httpSec.csrf(csrf -> csrf.disable() );
 
         // handle the exception
