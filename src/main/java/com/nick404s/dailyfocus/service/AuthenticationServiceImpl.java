@@ -6,6 +6,7 @@ import com.nick404s.dailyfocus.model.Authority;
 import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.repository.UserRepository;
 import com.nick404s.dailyfocus.dto.request.RegisterRequest;
+import com.nick404s.dailyfocus.util.AppRoles;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -96,14 +97,14 @@ public class AuthenticationServiceImpl  implements AuthenticationService{
         List<Authority> authorityList = new ArrayList<>();
 
         // assign the default role
-        authorityList.add(new Authority("ROLE_USER"));
+        authorityList.add(new Authority(AppRoles.ROLE_USER));
 
         boolean isFirstUser = userRepository.count() == 0;
 
         // check if the user is the first one in the db
         if (isFirstUser){
             // make the first user an administrator by default
-            authorityList.add(new Authority("ROLE_ADMIN"));
+            authorityList.add(new Authority(AppRoles.ROLE_ADMIN));
         }
 
         return authorityList;
