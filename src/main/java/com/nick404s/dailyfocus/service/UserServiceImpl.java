@@ -5,10 +5,8 @@ import com.nick404s.dailyfocus.model.Authority;
 import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.repository.UserRepository;
 import com.nick404s.dailyfocus.util.AppRoles;
+import com.nick404s.dailyfocus.util.AuthenticatedUserProvider;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,9 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final AuthenticatedUserProvider authenticatedUserProvider;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, AuthenticatedUserProvider authenticatedUserProvider) {
         this.userRepository = userRepository;
+        this.authenticatedUserProvider = authenticatedUserProvider;
     }
 
 
@@ -27,14 +27,8 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     public UserResponse getUserInfo() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // handle anonymous user
-        if (authentication == null || !authentication.isAuthenticated()
-                || authentication.getPrincipal().equals("anonymousUser")){
-            throw new AccessDeniedException("Authentication required");
-        }
-        // cast to User
-        User user = (User) authentication.getPrincipal();
+        // try to find the authenticated user
+        User user = authenticatedUserProvider.getAuthenticatedUser();
 
         return new UserResponse(
                 user.getId(),
@@ -46,15 +40,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser() {
-        // find the user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // handle anonymous user
-        if (authentication == null || !authentication.isAuthenticated()
-                || authentication.getPrincipal().equals("anonymousUser")){
-            throw new AccessDeniedException("Authentication required");
-        }
-        // cast to User
-        User user = (User) authentication.getPrincipal();
+        // try to find the authenticated user
+        User user = authenticatedUserProvider.getAuthenticatedUser();
         // check the user is not the last admin
         if (isLastAdmin(user)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin cannot delete itself");
@@ -65,7 +52,7 @@ public class UserServiceImpl implements UserService{
     }
 
     private boolean isLastAdmin(User user){
-        // check if the user admin
+        // check if the user is admin
         boolean isAdmin = user.getAuthorities()
                 .stream()
                 .anyMatch(authority -> AppRoles.ROLE_ADMIN.equals(authority.getAuthority()));
