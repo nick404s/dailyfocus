@@ -1,12 +1,13 @@
 package com.nick404s.dailyfocus.controller;
 
+import com.nick404s.dailyfocus.dto.request.PasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,13 +20,24 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "User information", description = "Get the current user info.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/info")
     public UserResponse getUserInfo(){
         return userService.getUserInfo();
     }
 
+    @Operation(summary = "Delete user", description = "Deletes the current user account.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping
     public void deleteUser(){
         userService.deleteUser();
+    }
+
+    @Operation(summary = "Update password", description = "Change the current user password after verification.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/password")
+    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) throws Exception{
+        userService.updatePassword(passwordUpdateRequest);
     }
 }
