@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Table(name = "tasks")
 @Entity
-public class Task {
+public class PlanTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -24,10 +24,10 @@ public class Task {
     private DailyPlan plan;
 
     // default constructor required by JPA
-    public Task() {
+    public PlanTask() {
     }
 
-    public Task(String text, int priority, boolean done, DailyPlan plan) {
+    public PlanTask(String text, int priority, boolean done, DailyPlan plan) {
         this.text = text;
         this.priority = priority;
         this.done = done;

@@ -3,6 +3,7 @@ package com.nick404s.dailyfocus.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class DailyPlan {
     // cascade crud operations to all the tasks.
     // remove the deleted(orphan) user tasks from the db
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
+    private final List<PlanTask> planTasks = new ArrayList<>();
 
 
     public DailyPlan() {
@@ -55,5 +56,30 @@ public class DailyPlan {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<PlanTask> getPlanTasks() {
+        return planTasks;
+    }
+
+    public void addPlanTask(PlanTask planTask){
+        planTasks.add(planTask);
+        planTask.setPlan(this); // set the back reference
     }
 }
