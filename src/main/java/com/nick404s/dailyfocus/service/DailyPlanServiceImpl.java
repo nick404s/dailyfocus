@@ -8,8 +8,10 @@ import com.nick404s.dailyfocus.model.PlanTask;
 import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.repository.DailyPlanRepository;
 import com.nick404s.dailyfocus.util.AuthenticatedUserProvider;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -51,27 +53,52 @@ public class DailyPlanServiceImpl implements DailyPlanService {
                 currentUser
         );
 
-        // check if there are tasks
-        if (dailyPlanRequest.getPlanTaskRequests() != null){
-
-            // add the tasks to the plan
-            dailyPlanRequest.getPlanTaskRequests().forEach(planTaskRequest -> {
-                // create a task from the request
-                PlanTask planTask = new PlanTask(
-                        planTaskRequest.getText(),
-                        planTaskRequest.getPriority(),
-                        false, // the new task is not done at the beginning
-                        dailyPlan
-                );
-                // add the task to the plan
-                dailyPlan.addPlanTask(planTask);
-            });
-        }
+        // add the tasks to the plan
+        dailyPlanRequest.getPlanTaskRequests().forEach(planTaskRequest -> {
+            // create a task from the request
+            PlanTask planTask = new PlanTask(
+                    planTaskRequest.getText(),
+                    planTaskRequest.getPriority(),
+                    false, // the new task is not done at the beginning
+                    dailyPlan
+            );
+            // add the task to the plan
+            dailyPlan.addPlanTask(planTask);
+        });
 
         // save the plan to the db
         DailyPlan savedDailyPlan = dailyPlanRepository.save(dailyPlan);
 
         return convertToDailyPlanResponse(savedDailyPlan);
+    }
+
+    @Override
+    @Transactional
+    public DailyPlanResponse toggleTaskCompletion(long planId, long taskId) {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = dailyPlanRepository
+                .findByIdAndUser(planId, currentUser)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily plan not found"));
+
+        // try to find a task in the plan
+        PlanTask planTask = dailyPlan
+                .getPlanTasks()
+                .stream()
+                .filter(task -> task.getId() == taskId)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        // toggle the task
+        planTask.setDone(!planTask.isDone());
+
+        // save updated plan to the db
+        DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
+
+        return convertToDailyPlanResponse(updatedDailyPlan);
     }
 
     private DailyPlanResponse convertToDailyPlanResponse(DailyPlan dailyPlan){

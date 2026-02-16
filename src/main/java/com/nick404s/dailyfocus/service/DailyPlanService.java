@@ -8,4 +8,5 @@ import java.util.List;
 public interface DailyPlanService {
     List<DailyPlanResponse> getAllDailyPlans();
     DailyPlanResponse createDailyPlan(DailyPlanRequest dailyPlanRequest);
+    DailyPlanResponse toggleTaskCompletion(long planId, long taskId);
 }
