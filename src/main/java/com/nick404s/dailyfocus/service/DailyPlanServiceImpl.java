@@ -25,6 +25,20 @@ public class DailyPlanServiceImpl implements DailyPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<DailyPlanResponse> getAllDailyPlans() {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // get all daily plans of the user and map them to the list of responses
+        return dailyPlanRepository.findByUser(currentUser)
+                .stream()
+                .map(this::convertToDailyPlanResponse)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public DailyPlanResponse createDailyPlan(DailyPlanRequest dailyPlanRequest) {
 
@@ -57,8 +71,12 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         // save the plan to the db
         DailyPlan savedDailyPlan = dailyPlanRepository.save(dailyPlan);
 
-        // convert the saved tasks to dto
-        List<PlanTaskResponse> planTaskResponses = savedDailyPlan
+        return convertToDailyPlanResponse(savedDailyPlan);
+    }
+
+    private DailyPlanResponse convertToDailyPlanResponse(DailyPlan dailyPlan){
+        // convert the tasks to dto
+        List<PlanTaskResponse> planTaskResponses = dailyPlan
                 .getPlanTasks()
                 .stream()
                 .map(planTask -> new PlanTaskResponse(
@@ -66,17 +84,14 @@ public class DailyPlanServiceImpl implements DailyPlanService {
                         planTask.getText(),
                         planTask.getPriority(),
                         planTask.isDone()
-                        ))
+                ))
                 .toList();
 
-        // create the response
-        DailyPlanResponse dailyPlanResponse = new DailyPlanResponse(
-                savedDailyPlan.getId(),
-                savedDailyPlan.getIntent(),
+        return new DailyPlanResponse(
+                dailyPlan.getId(),
+                dailyPlan.getIntent(),
                 planTaskResponses
 
         );
-
-        return dailyPlanResponse;
     }
 }

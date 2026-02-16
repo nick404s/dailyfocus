@@ -12,8 +12,8 @@ public class PlanTaskRequest {
     @Size(min = 3, max = 30, message = "Text must be 3-30 characters")
     private String text;
 
-    @Min(1)
-    @Max(5)
+    @Min(value = 1, message = "Priority must be at least 1")
+    @Max(value = 5, message = "Priority cannot exceed 5")
     private int priority;
 
 
