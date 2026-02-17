@@ -73,24 +73,22 @@ public class DailyPlanServiceImpl implements DailyPlanService {
     }
 
     @Override
+    public PlanTaskResponse createTask(long planId) {
+        return null; // TODO
+    }
+
+    @Override
     @Transactional
-    public DailyPlanResponse toggleTaskCompletion(long planId, long taskId) {
+    public PlanTaskResponse toggleTaskCompletion(long planId, long taskId) {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
 
         // try to get a daily plan from the db
-        DailyPlan dailyPlan = dailyPlanRepository
-                .findByIdAndUser(planId, currentUser)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily plan not found"));
+        DailyPlan dailyPlan = getDailyPlanFromDB(planId, currentUser);
 
         // try to find a task in the plan
-        PlanTask planTask = dailyPlan
-                .getPlanTasks()
-                .stream()
-                .filter(task -> task.getId() == taskId)
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+        PlanTask planTask = findPlanTask(taskId, dailyPlan);
 
         // toggle the task
         planTask.setDone(!planTask.isDone());
@@ -98,7 +96,52 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         // save updated plan to the db
         DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
 
-        return convertToDailyPlanResponse(updatedDailyPlan);
+        // get the updated task
+        PlanTask updatedTask = findPlanTask(taskId, updatedDailyPlan);
+
+        // convert to the response
+        PlanTaskResponse taskResponse = new PlanTaskResponse(
+                updatedTask.getId(),
+                updatedTask.getText(),
+                updatedTask.getPriority(),
+                updatedTask.isDone()
+        );
+        return taskResponse;
+    }
+
+    @Override
+    @Transactional
+    public void deleteTask(long planId, long taskId) {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = getDailyPlanFromDB(planId, currentUser);
+
+        // try to find a task in the plan
+        PlanTask planTask = findPlanTask(taskId, dailyPlan);
+
+        // delete the task
+        dailyPlan.getPlanTasks().remove(planTask);
+
+        // save the updated plan
+        dailyPlanRepository.save(dailyPlan);
+    }
+
+    private DailyPlan getDailyPlanFromDB(long planId, User currentUser){
+        return dailyPlanRepository
+                .findByIdAndUser(planId, currentUser)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily plan not found"));
+    }
+
+    private PlanTask findPlanTask(long taskId, DailyPlan dailyPlan){
+        return dailyPlan
+                .getPlanTasks()
+                .stream()
+                .filter(task -> task.getId() == taskId)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     }
 
     private DailyPlanResponse convertToDailyPlanResponse(DailyPlan dailyPlan){

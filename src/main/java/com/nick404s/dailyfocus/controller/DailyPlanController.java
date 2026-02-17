@@ -2,10 +2,12 @@ package com.nick404s.dailyfocus.controller;
 
 import com.nick404s.dailyfocus.dto.request.DailyPlanRequest;
 import com.nick404s.dailyfocus.dto.response.DailyPlanResponse;
+import com.nick404s.dailyfocus.dto.response.PlanTaskResponse;
 import com.nick404s.dailyfocus.service.DailyPlanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +36,19 @@ public class DailyPlanController {
     @GetMapping
     public List<DailyPlanResponse> getAllDailyPlans(){
         return dailyPlanService.getAllDailyPlans();
+    }
+
+    @Operation(summary = "Update task completion in a daily plan of a user", description = "Toggles task completion in a daily plan for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{planId}/tasks/{taskId}/toggle")
+    public PlanTaskResponse toggleTaskCompletion(@PathVariable @Min(1) long planId, @PathVariable @Min(1) long taskId){
+        return dailyPlanService.toggleTaskCompletion(planId, taskId);
+    }
+
+    @Operation(summary = "Delete a task", description = "Deletes a for a daily plan for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{planId}/tasks/{taskId}")
+    public void deleteTask(@PathVariable @Min(1) long planId, @PathVariable @Min(1) long taskId){
+        dailyPlanService.deleteTask(planId, taskId);
     }
 }
