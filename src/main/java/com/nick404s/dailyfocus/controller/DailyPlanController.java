@@ -1,6 +1,7 @@
 package com.nick404s.dailyfocus.controller;
 
 import com.nick404s.dailyfocus.dto.request.DailyPlanRequest;
+import com.nick404s.dailyfocus.dto.request.PlanTaskRequest;
 import com.nick404s.dailyfocus.dto.response.DailyPlanResponse;
 import com.nick404s.dailyfocus.dto.response.PlanTaskResponse;
 import com.nick404s.dailyfocus.service.DailyPlanService;
@@ -36,6 +37,13 @@ public class DailyPlanController {
     @GetMapping
     public List<DailyPlanResponse> getAllDailyPlans(){
         return dailyPlanService.getAllDailyPlans();
+    }
+
+    @Operation(summary = "Add a task to daily plan", description = "Add a new task to the existing daily plan for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{planId}/tasks")
+    public DailyPlanResponse addTaskToDailyPlan(@PathVariable @Min(1) long planId, @Valid @RequestBody PlanTaskRequest planTaskRequest){
+        return dailyPlanService.addTaskToDailyPlan(planId, planTaskRequest);
     }
 
     @Operation(summary = "Update task completion in a daily plan of a user", description = "Toggles task completion in a daily plan for a signed in user.") // the swagger docs

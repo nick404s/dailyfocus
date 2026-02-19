@@ -1,6 +1,7 @@
 package com.nick404s.dailyfocus.service;
 
 import com.nick404s.dailyfocus.dto.request.DailyPlanRequest;
+import com.nick404s.dailyfocus.dto.request.PlanTaskRequest;
 import com.nick404s.dailyfocus.dto.response.DailyPlanResponse;
 import com.nick404s.dailyfocus.dto.response.PlanTaskResponse;
 import com.nick404s.dailyfocus.model.DailyPlan;
@@ -73,8 +74,30 @@ public class DailyPlanServiceImpl implements DailyPlanService {
     }
 
     @Override
-    public PlanTaskResponse createTask(long planId) {
-        return null; // TODO
+    @Transactional
+    public DailyPlanResponse addTaskToDailyPlan(long planId, PlanTaskRequest planTaskRequest) {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
+
+        // create a task
+        PlanTask planTask = new PlanTask(
+                planTaskRequest.getText(),
+                planTaskRequest.getPriority(),
+                false, // the new task is not done at the beginning
+                dailyPlan
+        );
+
+        // add the plan to the task
+        dailyPlan.addPlanTask(planTask);
+
+        // save to the db
+        DailyPlan savedDailyPlan = dailyPlanRepository.save(dailyPlan);
+
+        return convertToDailyPlanResponse(savedDailyPlan);
     }
 
     @Override
@@ -85,10 +108,10 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
 
         // try to get a daily plan from the db
-        DailyPlan dailyPlan = getDailyPlanFromDB(planId, currentUser);
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
 
         // try to find a task in the plan
-        PlanTask planTask = findPlanTask(taskId, dailyPlan);
+        PlanTask planTask = findPlanTaskById(taskId, dailyPlan);
 
         // toggle the task
         planTask.setDone(!planTask.isDone());
@@ -97,7 +120,7 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
 
         // get the updated task
-        PlanTask updatedTask = findPlanTask(taskId, updatedDailyPlan);
+        PlanTask updatedTask = findPlanTaskById(taskId, updatedDailyPlan);
 
         // convert to the response
         PlanTaskResponse taskResponse = new PlanTaskResponse(
@@ -117,10 +140,10 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
 
         // try to get a daily plan from the db
-        DailyPlan dailyPlan = getDailyPlanFromDB(planId, currentUser);
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
 
         // try to find a task in the plan
-        PlanTask planTask = findPlanTask(taskId, dailyPlan);
+        PlanTask planTask = findPlanTaskById(taskId, dailyPlan);
 
         // delete the task
         dailyPlan.getPlanTasks().remove(planTask);
@@ -129,13 +152,13 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         dailyPlanRepository.save(dailyPlan);
     }
 
-    private DailyPlan getDailyPlanFromDB(long planId, User currentUser){
+    private DailyPlan findDailyPlanFromDB(long planId, User currentUser){
         return dailyPlanRepository
                 .findByIdAndUser(planId, currentUser)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily plan not found"));
     }
 
-    private PlanTask findPlanTask(long taskId, DailyPlan dailyPlan){
+    private PlanTask findPlanTaskById(long taskId, DailyPlan dailyPlan){
         return dailyPlan
                 .getPlanTasks()
                 .stream()
