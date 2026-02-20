@@ -25,18 +25,25 @@ public class DailyPlanController {
         this.dailyPlanService = dailyPlanService;
     }
 
-    @Operation(summary = "Create daily plan for a user", description = "Create a daily plan for the signed in user.") // the swagger docs
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public DailyPlanResponse createDailyPlan(@Valid @RequestBody DailyPlanRequest dailyPlanRequest){
-        return dailyPlanService.createDailyPlan(dailyPlanRequest);
-    }
-
     @Operation(summary = "Fetch all daily plans of a user", description = "Fetch all daily plans for a signed in user.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<DailyPlanResponse> getAllDailyPlans(){
         return dailyPlanService.getAllDailyPlans();
+    }
+
+    @Operation(summary = "Get a today plan for a user", description = "Get today's plans for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/today")
+    public DailyPlanResponse getDailyPlan(){
+        return dailyPlanService.getOrCreateTodayPlan();
+    }
+
+    @Operation(summary = "Update daily plan of a user", description = "Toggles task completion in a daily plan for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{planId}")
+    public DailyPlanResponse updateDailyPlan(@PathVariable @Min(1) long planId, @Valid @RequestBody DailyPlanRequest dailyPlanRequest){
+        return dailyPlanService.updateDailyPlan(planId, dailyPlanRequest);
     }
 
     @Operation(summary = "Delete a daily plan", description = "Deletes a daily plan for a signed in user.") // the swagger docs

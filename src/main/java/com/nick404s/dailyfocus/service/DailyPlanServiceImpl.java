@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,47 +42,48 @@ public class DailyPlanServiceImpl implements DailyPlanService {
                 .toList();
     }
 
+
+
     @Override
     @Transactional
-    public DailyPlanResponse createDailyPlan(DailyPlanRequest dailyPlanRequest) {
+    public DailyPlanResponse getOrCreateTodayPlan() {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
 
-        // set a daily plan
-        DailyPlan dailyPlan = new DailyPlan(
-                dailyPlanRequest.getIntent(),
-                currentUser
-        );
+        // get a current local date
+        LocalDate today = LocalDate.now();
 
-        // add the tasks to the plan
-        dailyPlanRequest.getPlanTaskRequests().forEach(planTaskRequest -> {
-            // create a task from the request
-            PlanTask planTask = new PlanTask(
-                    planTaskRequest.getText(),
-                    planTaskRequest.getPriority(),
-                    false, // the new task is not done at the beginning
-                    dailyPlan
-            );
-            // add the task to the plan
-            dailyPlan.addPlanTask(planTask);
-        });
+        // try to find the plan in the db
+        // else create a new plan
+        DailyPlan dailyPlan = dailyPlanRepository
+                .findByUserAndDate(currentUser, today)
+                .orElseGet(() -> dailyPlanRepository.save(new DailyPlan(currentUser, today)));
 
-        // save the plan to the db
-        DailyPlan savedDailyPlan = dailyPlanRepository.save(dailyPlan);
-
-        return convertToDailyPlanResponse(savedDailyPlan);
+        return convertToDailyPlanResponse(dailyPlan);
     }
 
     @Override
-    public DailyPlanResponse getOrCreateDailyPlan() {
+    @Transactional
+    public DailyPlanResponse updateDailyPlan(long planId, DailyPlanRequest dailyPlanRequest) {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
-        return null;
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
+
+        // set the intent
+        dailyPlan.setIntent(dailyPlanRequest.getIntent());
+
+        // save to the db
+        DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
+
+        return convertToDailyPlanResponse(updatedDailyPlan);
     }
 
     @Override
+    @Transactional
     public void deleteDailyPlan(long planId) {
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
@@ -203,8 +205,8 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         return new DailyPlanResponse(
                 dailyPlan.getId(),
                 dailyPlan.getIntent(),
+                dailyPlan.getDate(),
                 planTaskResponses
-
         );
     }
 }

@@ -37,7 +37,7 @@ public class UserController {
     @Operation(summary = "Update password", description = "Change the current user password after verification.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/password")
-    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) throws Exception{
+    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) throws Exception{ // TODO
         userService.updatePassword(passwordUpdateRequest);
     }
 }

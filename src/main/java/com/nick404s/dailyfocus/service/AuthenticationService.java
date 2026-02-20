@@ -6,6 +6,6 @@ import com.nick404s.dailyfocus.dto.response.AuthenticationResponse;
 
 public interface AuthenticationService {
 
-    void register(RegisterRequest registerRequest) throws Exception;
+    void register(RegisterRequest registerRequest);
     AuthenticationResponse login(AuthenticationRequest authenticationRequest);
 }

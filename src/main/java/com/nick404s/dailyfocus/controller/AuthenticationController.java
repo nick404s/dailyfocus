@@ -24,7 +24,7 @@ public class AuthenticationController {
     @Operation(summary = "Register a user", description = "Creates a new user in the db.") // the swagger docs
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public void register(@Valid @RequestBody RegisterRequest registerRequest) throws Exception{
+    public void register(@Valid @RequestBody RegisterRequest registerRequest) {
 
         authenticationService.register(registerRequest);
     }

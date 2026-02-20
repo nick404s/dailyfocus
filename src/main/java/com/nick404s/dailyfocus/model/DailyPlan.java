@@ -3,6 +3,7 @@ package com.nick404s.dailyfocus.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,9 @@ public class DailyPlan {
     @JoinColumn(name = "user_id", nullable = false) // every plan must have a user
     private User user;
 
+    @Column(nullable = false) // actual local date of the plan
+    private LocalDate date;
+
     @CreationTimestamp // automatically creates a time stamp in the db
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -37,9 +41,10 @@ public class DailyPlan {
     public DailyPlan() {
     }
 
-    public DailyPlan(String intent, User user) {
-        this.intent = intent;
+    public DailyPlan(User user, LocalDate date) {
+        this.intent = ""; // default
         this.user = user;
+        this.date = date;
     }
 
     public String getIntent() {
@@ -64,6 +69,14 @@ public class DailyPlan {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Date getCreatedAt() {

@@ -32,11 +32,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @CreationTimestamp // automatically creates a time stamp in the db
+    @CreationTimestamp // automatically creates a creation time stamp in the db
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
 
-    @UpdateTimestamp
+    @UpdateTimestamp // automatically creates an update time stamp in the db
     @Column(name = "updated_at")
     private Date updatedAt;
 

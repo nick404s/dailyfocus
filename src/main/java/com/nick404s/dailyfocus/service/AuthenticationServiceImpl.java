@@ -7,11 +7,13 @@ import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.repository.UserRepository;
 import com.nick404s.dailyfocus.dto.request.RegisterRequest;
 import com.nick404s.dailyfocus.util.AppRoles;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,11 +36,11 @@ public class AuthenticationServiceImpl  implements AuthenticationService{
 
     @Override
     @Transactional // allows making changes the db state
-    public void register(RegisterRequest registerRequest) throws Exception {
+    public void register(RegisterRequest registerRequest) {
 
         // check for a duplicate email
         if (isEmailPresent(registerRequest.getEmail())){
-            throw new Exception("Email already taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The email already registered");
         }
 
         // create a new user

@@ -1,7 +1,6 @@
 package com.nick404s.dailyfocus.dto.response;
 
-import jakarta.persistence.Column;
-
+import java.time.LocalDate;
 import java.util.List;
 
 public class DailyPlanResponse {
@@ -10,11 +9,14 @@ public class DailyPlanResponse {
 
     private String intent;
 
+    private LocalDate date;
+
     private List<PlanTaskResponse> planTaskResponses;
 
-    public DailyPlanResponse(long id, String intent, List<PlanTaskResponse> planTaskResponses) {
+    public DailyPlanResponse(long id, String intent, LocalDate date, List<PlanTaskResponse> planTaskResponses) {
         this.id = id;
         this.intent = intent;
+        this.date = date;
         this.planTaskResponses = planTaskResponses;
     }
 
@@ -32,6 +34,14 @@ public class DailyPlanResponse {
 
     public void setIntent(String intent) {
         this.intent = intent;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public List<PlanTaskResponse> getPlanTaskResponses() {
