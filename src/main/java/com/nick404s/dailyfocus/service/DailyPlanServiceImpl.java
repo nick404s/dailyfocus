@@ -74,6 +74,26 @@ public class DailyPlanServiceImpl implements DailyPlanService {
     }
 
     @Override
+    public DailyPlanResponse getOrCreateDailyPlan() {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+        return null;
+    }
+
+    @Override
+    public void deleteDailyPlan(long planId) {
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
+
+        // delete the plan
+        dailyPlanRepository.delete(dailyPlan);
+    }
+
+    @Override
     @Transactional
     public DailyPlanResponse addTaskToDailyPlan(long planId, PlanTaskRequest planTaskRequest) {
 

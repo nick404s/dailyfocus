@@ -14,5 +14,7 @@ public interface DailyPlanRepository extends CrudRepository<DailyPlan, Long> {
 
     List<DailyPlan> findByUser(User user);
 
+//    Optional<DailyPlan> findByUserAnd
+
     Optional<DailyPlan> findByIdAndUser(long id, User user);
 }

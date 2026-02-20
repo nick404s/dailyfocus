@@ -39,6 +39,13 @@ public class DailyPlanController {
         return dailyPlanService.getAllDailyPlans();
     }
 
+    @Operation(summary = "Delete a daily plan", description = "Deletes a daily plan for a signed in user.") // the swagger docs
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{planId}")
+    public void deleteDailyPlan(@PathVariable @Min(1) long planId) {
+        dailyPlanService.deleteDailyPlan(planId);
+    }
+
     @Operation(summary = "Add a task to daily plan", description = "Add a new task to the existing daily plan for a signed in user.") // the swagger docs
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{planId}/tasks")

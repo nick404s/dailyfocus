@@ -10,6 +10,8 @@ import java.util.List;
 public interface DailyPlanService {
     List<DailyPlanResponse> getAllDailyPlans();
     DailyPlanResponse createDailyPlan(DailyPlanRequest dailyPlanRequest);
+    DailyPlanResponse getOrCreateDailyPlan();
+    void deleteDailyPlan(long planId);
     DailyPlanResponse addTaskToDailyPlan(long planId, PlanTaskRequest planTaskRequest);
     PlanTaskResponse toggleTaskCompletion(long planId, long taskId);
     void deleteTask(long planId, long taskId);
