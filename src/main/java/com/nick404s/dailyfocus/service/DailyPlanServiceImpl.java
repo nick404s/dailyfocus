@@ -42,8 +42,6 @@ public class DailyPlanServiceImpl implements DailyPlanService {
                 .toList();
     }
 
-
-
     @Override
     @Transactional
     public DailyPlanResponse getOrCreateTodayPlan() {
@@ -97,7 +95,7 @@ public class DailyPlanServiceImpl implements DailyPlanService {
 
     @Override
     @Transactional
-    public DailyPlanResponse addTaskToDailyPlan(long planId, PlanTaskRequest planTaskRequest) {
+    public DailyPlanResponse addTask(long planId, PlanTaskRequest planTaskRequest) {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
@@ -124,7 +122,34 @@ public class DailyPlanServiceImpl implements DailyPlanService {
 
     @Override
     @Transactional
-    public PlanTaskResponse toggleTaskCompletion(long planId, long taskId) {
+    public DailyPlanResponse updateTask(long planId, long taskId, PlanTaskRequest planTaskRequest) {
+
+        // authenticate the user
+        User currentUser = authenticatedUserProvider.getAuthenticatedUser();
+
+        // try to get a daily plan from the db
+        DailyPlan dailyPlan = findDailyPlanFromDB(planId, currentUser);
+
+        // try to find a task in the plan
+        PlanTask planTask = findPlanTaskById(taskId, dailyPlan);
+
+        // update the task fields
+        if (planTaskRequest.getText() != null){
+            planTask.setText(planTaskRequest.getText());
+        }
+        if (planTaskRequest.getPriority() != null){
+            planTask.setPriority(planTaskRequest.getPriority());
+        }
+
+        // save updated plan to the db
+        DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
+
+        return convertToDailyPlanResponse(updatedDailyPlan);
+    }
+
+    @Override
+    @Transactional
+    public DailyPlanResponse toggleTaskCompletion(long planId, long taskId) {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
@@ -141,17 +166,7 @@ public class DailyPlanServiceImpl implements DailyPlanService {
         // save updated plan to the db
         DailyPlan updatedDailyPlan = dailyPlanRepository.save(dailyPlan);
 
-        // get the updated task
-        PlanTask updatedTask = findPlanTaskById(taskId, updatedDailyPlan);
-
-        // convert to the response
-        PlanTaskResponse taskResponse = new PlanTaskResponse(
-                updatedTask.getId(),
-                updatedTask.getText(),
-                updatedTask.getPriority(),
-                updatedTask.isDone()
-        );
-        return taskResponse;
+        return convertToDailyPlanResponse(updatedDailyPlan);
     }
 
     @Override

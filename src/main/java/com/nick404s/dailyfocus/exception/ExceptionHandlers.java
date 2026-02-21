@@ -19,7 +19,7 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(Exception.class) // global exception handling
     public ResponseEntity<ExceptionResponse> handleException(Exception exception){
-        return buildResponseEntity(exception, HttpStatus.BAD_REQUEST);
+        return buildResponseEntity(exception, HttpStatus.BAD_REQUEST); // if something unknown default to bad request
     }
 
     private ResponseEntity<ExceptionResponse> buildResponseEntity(Exception exception, HttpStatus httpStatus){

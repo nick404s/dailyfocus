@@ -14,11 +14,7 @@ public class PlanTaskRequest {
 
     @Min(value = 1, message = "Priority must be at least 1")
     @Max(value = 5, message = "Priority cannot exceed 5")
-    private int priority;
-
-
-//    private boolean done;
-
+    private Integer priority; // object Int is easier to check
 
     public PlanTaskRequest(String text, int priority) {
         this.text = text;
@@ -33,7 +29,7 @@ public class PlanTaskRequest {
         this.text = text;
     }
 
-    public int getPriority() {
+    public Integer getPriority() {
         return priority;
     }
 

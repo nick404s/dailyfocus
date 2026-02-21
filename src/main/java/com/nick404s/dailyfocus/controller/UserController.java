@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "User information", description = "Get the current user info.") // the swagger docs
+    @Operation(summary = "Get user information", description = "Get the current user info.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/info")
     public UserResponse getUserInfo(){
@@ -37,7 +37,7 @@ public class UserController {
     @Operation(summary = "Update password", description = "Change the current user password after verification.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/password")
-    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) throws Exception{ // TODO
+    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         userService.updatePassword(passwordUpdateRequest);
     }
 }
