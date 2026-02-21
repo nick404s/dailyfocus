@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -33,9 +34,9 @@ public class DailyPlanController {
 
     @Operation(summary = "Get a today plan for a user", description = "Gets today's plan for a signed in user.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/today")
-    public DailyPlanResponse getDailyPlan(){
-        return dailyPlanService.getOrCreateTodayPlan();
+    @GetMapping("/plan")
+    public DailyPlanResponse getDailyPlan(@RequestParam LocalDate date){
+        return dailyPlanService.getOrCreatePlan(date);
     }
 
     @Operation(summary = "Update daily plan for a user", description = "Updates daily plan fields for a signed in user.") // the swagger docs

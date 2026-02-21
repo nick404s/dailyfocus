@@ -4,11 +4,12 @@ import com.nick404s.dailyfocus.dto.request.DailyPlanRequest;
 import com.nick404s.dailyfocus.dto.request.PlanTaskRequest;
 import com.nick404s.dailyfocus.dto.response.DailyPlanResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface DailyPlanService {
     List<DailyPlanResponse> getAllDailyPlans();
-    DailyPlanResponse getOrCreateTodayPlan();
+    DailyPlanResponse getOrCreatePlan(LocalDate date);
     DailyPlanResponse updateDailyPlan(long planId, DailyPlanRequest dailyPlanRequest);
     void deleteDailyPlan(long planId);
     DailyPlanResponse addTask(long planId, PlanTaskRequest planTaskRequest);

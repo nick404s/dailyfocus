@@ -44,19 +44,16 @@ public class DailyPlanServiceImpl implements DailyPlanService {
 
     @Override
     @Transactional
-    public DailyPlanResponse getOrCreateTodayPlan() {
+    public DailyPlanResponse getOrCreatePlan(LocalDate date) {
 
         // authenticate the user
         User currentUser = authenticatedUserProvider.getAuthenticatedUser();
 
-        // get a current local date
-        LocalDate today = LocalDate.now();
-
         // try to find the plan in the db
-        // else create a new plan
+        // else create a new plan for the date
         DailyPlan dailyPlan = dailyPlanRepository
-                .findByUserAndDate(currentUser, today)
-                .orElseGet(() -> dailyPlanRepository.save(new DailyPlan(currentUser, today)));
+                .findByUserAndDate(currentUser, date)
+                .orElseGet(() -> dailyPlanRepository.save(new DailyPlan(currentUser, date)));
 
         return convertToDailyPlanResponse(dailyPlan);
     }
