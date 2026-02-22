@@ -1,6 +1,7 @@
 package com.nick404s.dailyfocus.service;
 
 import com.nick404s.dailyfocus.dto.request.UserPasswordUpdateRequest;
+import com.nick404s.dailyfocus.dto.request.UpdateProfileRequest;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.model.Authority;
 import com.nick404s.dailyfocus.model.User;
@@ -40,6 +41,21 @@ public class UserServiceImpl implements UserService{
                 user.getEmail(),
                 user.getAuthorities().stream().map(auth -> (Authority) auth).toList()
                 );
+    }
+
+    @Override
+    @Transactional
+    public void updateUserInfo(UpdateProfileRequest updateProfileRequest) {
+
+        // try to find the authenticated user
+        User user = authenticatedUserProvider.getAuthenticatedUser();
+
+        // set the changes
+        user.setFirstName(updateProfileRequest.getFirstName());
+        user.setLastName(updateProfileRequest.getLastName());
+
+        // save to the db
+        userRepository.save(user);
     }
 
     @Override

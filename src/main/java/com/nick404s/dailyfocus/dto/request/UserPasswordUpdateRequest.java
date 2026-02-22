@@ -1,19 +1,19 @@
 package com.nick404s.dailyfocus.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserPasswordUpdateRequest {
 
-    @NotEmpty(message = "Old password is required")
+    @NotBlank(message = "Old password is required")
     @Size(min = 6, max = 30, message = "Password must be 6-30 characters long")
     private String oldPassword;
 
-    @NotEmpty(message = "New password is required")
+    @NotBlank(message = "New password is required")
     @Size(min = 6, max = 30, message = "Password must be 6-30 characters long")
     private String newPassword;
 
-    @NotEmpty(message = "Confirmed password is required")
+    @NotBlank(message = "Confirmed password is required")
     @Size(min = 6, max = 30, message = "Password must be 6-30 characters long")
     private String newPasswordConfirmation;
 

@@ -1,6 +1,7 @@
 package com.nick404s.dailyfocus.controller;
 
 import com.nick404s.dailyfocus.dto.request.UserPasswordUpdateRequest;
+import com.nick404s.dailyfocus.dto.request.UpdateProfileRequest;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,14 +29,21 @@ public class UserController {
     }
 
     @Operation(summary = "Delete user", description = "Deletes the current user account.") // the swagger docs
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
     public void deleteUser(){
         userService.deleteUser();
     }
 
+    @Operation(summary = "Update user profile", description = "Change the current user profile info after verification.") // the swagger docs
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/me")
+    public void updateUserProfile(@Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
+        userService.updateUserInfo(updateProfileRequest);
+    }
+
     @Operation(summary = "Update password", description = "Change the current user password after verification.") // the swagger docs
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/password")
     public void updatePassword(@Valid @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         userService.updatePassword(userPasswordUpdateRequest);

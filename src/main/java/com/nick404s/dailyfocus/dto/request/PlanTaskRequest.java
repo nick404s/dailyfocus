@@ -1,14 +1,11 @@
 package com.nick404s.dailyfocus.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class PlanTaskRequest {
 
     // the task part
-    @NotEmpty(message = "Text is required")
+    @NotBlank(message = "Text is required")
     @Size(min = 3, max = 30, message = "Text must be 3-30 characters")
     private String text;
 
