@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> { // Long for id
     Optional<User> findByEmail(String email);
 
-    // get the number of admins in the db. Query all User entities. u - is an alias for any user, a - for the authorities
+    // get the number of all admins in the db. Query all User entities. u - is an alias for any user, a - for the authorities
     @Query("SELECT COUNT(u) FROM User u JOIN u.authorities a WHERE a.authority = '" + AppRoles.ROLE_ADMIN + "'")
     long countAdminUsers();
 }

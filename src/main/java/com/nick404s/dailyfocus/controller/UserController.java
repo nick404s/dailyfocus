@@ -9,9 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "REST API User Endpoints", description = "Current user info operations.") // the swagger docs
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "REST API User Endpoints", description = "Current user info operations.") // the swagger docs
 public class UserController {
 
     private final UserService userService;

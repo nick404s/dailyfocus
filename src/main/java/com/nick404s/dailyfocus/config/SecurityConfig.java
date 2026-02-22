@@ -2,6 +2,7 @@ package com.nick404s.dailyfocus.config;
 
 
 import com.nick404s.dailyfocus.repository.UserRepository;
+import com.nick404s.dailyfocus.util.AppRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -71,7 +72,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**",
                                 "/docs").permitAll()
-                        .anyRequest().authenticated() // for all other requests to allow only work with the jwt auth
+                        .requestMatchers("/api/admin/**").hasRole(AppRoles.ADMIN) // permit admin routes only to the admin users
+                        .anyRequest().authenticated() // for all other requests to allow only work with the jwt authentication
         );
 
         // disable csrf. jwt is stateless

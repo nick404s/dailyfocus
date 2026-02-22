@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface AdminService {
     List<UserResponse> getAllUsers();
-    UserResponse promoteToAdmin(long userId);
+    UserResponse getUserById(long id);
+    UserResponse promoteToAdmin(long id);
+    void deleteNonAdminUser(long id);
 }

@@ -10,9 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "REST API Authentication Endpoints", description = "Register and Login operations.") // the swagger docs
 @RestController
 @RequestMapping("api/auth")
-@Tag(name = "REST API Authentication Endpoints", description = "Register and Login operations.") // the swagger docs
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;

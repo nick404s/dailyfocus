@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "REST API Daily Plans Endpoints", description = "Managing current user daily plan operations.") // the swagger docs
 @RestController
 @RequestMapping("/api/dailyplans")
-@Tag(name = "REST API Daily Plans Endpoints", description = "Managing current user daily plan operations.") // the swagger docs
 public class DailyPlanController {
 
     private final DailyPlanService dailyPlanService;

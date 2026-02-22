@@ -26,4 +26,8 @@ public interface DailyPlanRepository extends CrudRepository<DailyPlan, Long> {
 //    Optional<DailyPlan> findByUserAndDateWithTasks(User user, LocalDate date);
 
     Optional<DailyPlan> findByIdAndUser(long id, User user);
+
+    // Stats
+
+    long count();
 }
