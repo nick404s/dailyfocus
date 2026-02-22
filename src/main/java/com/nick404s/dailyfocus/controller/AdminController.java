@@ -1,6 +1,7 @@
 package com.nick404s.dailyfocus.controller;
 
 
+import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,13 @@ public class AdminController {
         return adminService.getAllUsers();
     }
 
+    @Operation(summary = "Fetch a user", description = "Fetches user data in the system.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{userId}")
+    public UserResponse getUserById(@PathVariable @Min(1) long userId) {
+        return adminService.getUserById(userId);
+    }
+
     @Operation(summary = "Promote a user to admin", description = "Promotes a non-admin user to admin role.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/role")
@@ -41,5 +49,12 @@ public class AdminController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable @Min(1) long userId) {
         adminService.deleteNonAdminUser(userId);
+    }
+
+    @Operation(summary = "Fetch system stats", description = "Fetches overall stats in the system.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/stats")
+    public SystemStatsResponse getSystemStats(){
+        return adminService.getSystemStats();
     }
 }

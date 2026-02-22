@@ -1,9 +1,11 @@
 package com.nick404s.dailyfocus.service;
 
+import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.model.Authority;
 import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.repository.DailyPlanRepository;
+import com.nick404s.dailyfocus.repository.TaskRepository;
 import com.nick404s.dailyfocus.repository.UserRepository;
 import com.nick404s.dailyfocus.util.AppRoles;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,12 @@ public class AdminServiceImpl implements AdminService{
 
     private final UserRepository userRepository;
     private final DailyPlanRepository dailyPlanRepository;
+    private final TaskRepository taskRepository;
 
-    public AdminServiceImpl(UserRepository userRepository) {
+    public AdminServiceImpl(UserRepository userRepository, DailyPlanRepository dailyPlanRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
+        this.dailyPlanRepository = dailyPlanRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -68,6 +73,15 @@ public class AdminServiceImpl implements AdminService{
         User user = getNonAdminUserFromDB(id);
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public SystemStatsResponse getSystemStats() {
+        return new SystemStatsResponse(
+                userRepository.count(),
+                dailyPlanRepository.count(),
+                taskRepository.count()
+        );
     }
 
     private UserResponse convertToUserResponse(User user) {
