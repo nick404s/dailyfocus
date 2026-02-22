@@ -1,5 +1,6 @@
 package com.nick404s.dailyfocus.service;
 
+import com.nick404s.dailyfocus.dto.request.AdminPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.model.Authority;
@@ -9,6 +10,7 @@ import com.nick404s.dailyfocus.repository.TaskRepository;
 import com.nick404s.dailyfocus.repository.UserRepository;
 import com.nick404s.dailyfocus.util.AppRoles;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,11 +25,13 @@ public class AdminServiceImpl implements AdminService{
     private final UserRepository userRepository;
     private final DailyPlanRepository dailyPlanRepository;
     private final TaskRepository taskRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminServiceImpl(UserRepository userRepository, DailyPlanRepository dailyPlanRepository, TaskRepository taskRepository) {
+    public AdminServiceImpl(UserRepository userRepository, DailyPlanRepository dailyPlanRepository, TaskRepository taskRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.dailyPlanRepository = dailyPlanRepository;
         this.taskRepository = taskRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -73,6 +77,20 @@ public class AdminServiceImpl implements AdminService{
         User user = getNonAdminUserFromDB(id);
 
         userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
+    public void resetUserPassword(long id, AdminPasswordUpdateRequest adminPasswordUpdateRequest) {
+
+        // find the user
+        User user = getUserFromDB(id);
+
+        // update the password
+        user.setPassword(passwordEncoder.encode(adminPasswordUpdateRequest.getNewPassword()));
+
+        // save to the db
+        userRepository.save(user);
     }
 
     @Override

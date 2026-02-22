@@ -1,6 +1,6 @@
 package com.nick404s.dailyfocus.controller;
 
-import com.nick404s.dailyfocus.dto.request.PasswordUpdateRequest;
+import com.nick404s.dailyfocus.dto.request.UserPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,7 @@ public class UserController {
     @Operation(summary = "Update password", description = "Change the current user password after verification.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/password")
-    public void updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
-        userService.updatePassword(passwordUpdateRequest);
+    public void updatePassword(@Valid @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        userService.updatePassword(userPasswordUpdateRequest);
     }
 }

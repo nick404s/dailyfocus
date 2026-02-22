@@ -1,5 +1,6 @@
 package com.nick404s.dailyfocus.service;
 
+import com.nick404s.dailyfocus.dto.request.AdminPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 
@@ -10,5 +11,6 @@ public interface AdminService {
     UserResponse getUserById(long id);
     UserResponse promoteToAdmin(long id);
     void deleteNonAdminUser(long id);
+    void resetUserPassword(long id, AdminPasswordUpdateRequest adminPasswordUpdateRequest);
     SystemStatsResponse getSystemStats();
 }

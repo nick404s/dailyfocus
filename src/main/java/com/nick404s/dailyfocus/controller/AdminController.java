@@ -1,11 +1,13 @@
 package com.nick404s.dailyfocus.controller;
 
 
+import com.nick404s.dailyfocus.dto.request.AdminPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,14 @@ public class AdminController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable @Min(1) long userId) {
         adminService.deleteNonAdminUser(userId);
+    }
+
+    @Operation(summary = "Reset user password", description = "Resets user password by an admin.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{userId}/password")
+    public void resetUserPassword(@PathVariable @Min(1) long userId,
+                                  @Valid @RequestBody AdminPasswordUpdateRequest adminPasswordUpdateRequest) {
+        adminService.resetUserPassword(userId, adminPasswordUpdateRequest);
     }
 
     @Operation(summary = "Fetch system stats", description = "Fetches overall stats in the system.") // the swagger docs

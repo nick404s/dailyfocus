@@ -1,6 +1,6 @@
 package com.nick404s.dailyfocus.service;
 
-import com.nick404s.dailyfocus.dto.request.PasswordUpdateRequest;
+import com.nick404s.dailyfocus.dto.request.UserPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.model.Authority;
 import com.nick404s.dailyfocus.model.User;
@@ -57,29 +57,29 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
+    public void updatePassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
         // try to find the authenticated user
         User user = authenticatedUserProvider.getAuthenticatedUser();
 
         // validate the old password
-        if(!isOldPasswordValid(user.getPassword(), passwordUpdateRequest.getOldPassword())){
+        if(!isOldPasswordValid(user.getPassword(), userPasswordUpdateRequest.getOldPassword())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password is incorrect");
         }
 
         // check the new password confirmation
-        if (!isNewPasswordConfirmed(passwordUpdateRequest.getNewPassword(),
-                passwordUpdateRequest.getNewPasswordConfirmation())){
+        if (!isNewPasswordConfirmed(userPasswordUpdateRequest.getNewPassword(),
+                userPasswordUpdateRequest.getNewPasswordConfirmation())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New passwords do not match");
         }
 
         // check if the new password is the same as the old one
-        if (!isNewPasswordDifferent(passwordUpdateRequest.getOldPassword(),
-                passwordUpdateRequest.getNewPassword())){
+        if (!isNewPasswordDifferent(userPasswordUpdateRequest.getOldPassword(),
+                userPasswordUpdateRequest.getNewPassword())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password must be different from the old one");
         }
 
         // update the password
-        user.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(userPasswordUpdateRequest.getNewPassword()));
         // save to the db
         userRepository.save(user);
     }
@@ -109,6 +109,4 @@ public class UserServiceImpl implements UserService{
 
         return false;
     }
-
-
 }
