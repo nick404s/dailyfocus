@@ -90,6 +90,5 @@ sping.jwt.expiration=900000
 ## The Swagger Pics
 
 <img width="1772" height="203" alt="Screenshot 2026-02-24 at 1 13 10 PM" src="https://github.com/user-attachments/assets/2225b0b8-9c8f-4644-bf6a-a9280a4f80c4" />
-
 <img width="1765" height="1224" alt="Screenshot 2026-02-24 at 1 09 43 PM" src="https://github.com/user-attachments/assets/efe97f08-6558-40ff-be50-d93792a8728c" />
 
