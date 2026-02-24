@@ -59,19 +59,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteUser() {
-        // try to find the authenticated user
-        User user = authenticatedUserProvider.getAuthenticatedUser();
-        // check the user is not the last admin
-        if (isLastAdmin(user)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin cannot delete itself");
-        }
-
-        // delete the user
-        userRepository.delete(user);
-    }
-
-    @Override
     @Transactional
     public void updatePassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
         // try to find the authenticated user

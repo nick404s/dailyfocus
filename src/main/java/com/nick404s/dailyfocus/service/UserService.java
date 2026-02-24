@@ -7,6 +7,5 @@ import com.nick404s.dailyfocus.dto.response.UserResponse;
 public interface UserService {
     UserResponse getUserInfo();
     void updateUserInfo(UpdateProfileRequest updateProfileRequest);
-    void deleteUser();
     void updatePassword(UserPasswordUpdateRequest userPasswordUpdateRequest);
 }

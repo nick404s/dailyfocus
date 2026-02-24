@@ -60,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // runs once
             // load the user details from the db
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
+            // check for inactive user to reject
+
             // validate the token
             if (jwtService.isTokenValid(jwToken, userDetails)){
                 // create a new auth token

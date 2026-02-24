@@ -28,13 +28,6 @@ public class UserController {
         return userService.getUserInfo();
     }
 
-    @Operation(summary = "Delete user", description = "Deletes the current user account.") // the swagger docs
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping
-    public void deleteUser(){
-        userService.deleteUser();
-    }
-
     @Operation(summary = "Update user profile", description = "Change the current user profile info after verification.") // the swagger docs
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/me")
