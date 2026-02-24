@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "REST API Authentication Endpoints", description = "Register and Login operations.") // the swagger docs
+@Tag(name = "Daily Focus REST API Authentication Endpoints", description = "Register and Login operations.") // the swagger docs
 @RestController
 @RequestMapping("api/auth")
 public class AuthenticationController {

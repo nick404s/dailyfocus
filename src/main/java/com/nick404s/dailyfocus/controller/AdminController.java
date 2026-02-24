@@ -4,7 +4,6 @@ package com.nick404s.dailyfocus.controller;
 import com.nick404s.dailyfocus.dto.request.AdminPasswordUpdateRequest;
 import com.nick404s.dailyfocus.dto.response.AdminUserResponse;
 import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
-import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "REST API Admin Endpoints", description = "Admin related operations.") // the swagger docs
+@Tag(name = "Daily Focus REST API Admin Endpoints", description = "Admin related operations.") // the swagger docs
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
