@@ -26,11 +26,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(unique = true, length = 100, nullable = false)
+    @Column(unique = true, length = 100, nullable = false) // used as username
     private String email;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private boolean active = true; // active when created
 
     @CreationTimestamp // automatically creates a creation time stamp in the db
     @Column(updatable = false, name = "created_at")
@@ -87,7 +90,19 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return this.active;
+    } // check the user active field
+
+    public void activate(){
+        this.active = true;
+    }
+
+    public void deactivate(){
+        this.active = false;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public long getId() {
@@ -124,5 +139,9 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

@@ -2,6 +2,7 @@ package com.nick404s.dailyfocus.controller;
 
 
 import com.nick404s.dailyfocus.dto.request.AdminPasswordUpdateRequest;
+import com.nick404s.dailyfocus.dto.response.AdminUserResponse;
 import com.nick404s.dailyfocus.dto.response.SystemStatsResponse;
 import com.nick404s.dailyfocus.dto.response.UserResponse;
 import com.nick404s.dailyfocus.service.AdminService;
@@ -28,22 +29,36 @@ public class AdminController {
     @Operation(summary = "Fetch all users", description = "Fetches all users in the system.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<UserResponse> getAllUsers(){
+    public List<AdminUserResponse> getAllUsers(){
         return adminService.getAllUsers();
     }
 
     @Operation(summary = "Fetch a user", description = "Fetches user data in the system.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{userId}")
-    public UserResponse getUserById(@PathVariable @Min(1) long userId) {
+    public AdminUserResponse getUserById(@PathVariable @Min(1) long userId) {
         return adminService.getUserById(userId);
     }
 
     @Operation(summary = "Promote a user to admin", description = "Promotes a non-admin user to admin role.") // the swagger docs
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{userId}/role")
-    public UserResponse promoteToAdmin(@PathVariable @Min(1) long userId){
+    public AdminUserResponse promoteToAdmin(@PathVariable @Min(1) long userId){
         return adminService.promoteToAdmin(userId);
+    }
+
+    @Operation(summary = "Activate user", description = "Activates the selected user account.") // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{userId}/activate")
+    public AdminUserResponse activateUser(@PathVariable @Min(1) long userId){
+        return adminService.activateUser(userId);
+    }
+
+    @Operation(summary = "Deactivate user", description = "Deactivates the selected user account.")  // the swagger docs
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{userId}/deactivate")
+    public AdminUserResponse deactivateUser(@PathVariable @Min(1) long userId){
+        return adminService.deactivateUser(userId);
     }
 
     @Operation(summary = "Delete a user", description = "Deletes a non-admin user from the system.") // the swagger docs

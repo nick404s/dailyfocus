@@ -1,5 +1,6 @@
 package com.nick404s.dailyfocus.config;
 
+import com.nick404s.dailyfocus.model.User;
 import com.nick404s.dailyfocus.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,9 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // runs once
         // get the header out of the request
         final String authHeader = request.getHeader("Authorization");
 
-        final String jwToken;
-        final String userEmail;
-
         // check the header
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             // reject the request
@@ -51,16 +49,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // runs once
         }
 
         // get the token which starts at the 7 char after "Bearer "
-        jwToken = authHeader.substring(7);
+        final String jwToken = authHeader.substring(7);
         // get the email
-        userEmail = jwtService.extractUsername(jwToken);
+        final String userEmail = jwtService.extractUsername(jwToken);
 
         // check the email and sec context holder
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
             // load the user details from the db
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            // check for inactive user to reject
+            // cast to User to access active status
+            User user = (User) userDetails;
+
+            // check for inactive user to reject authorization
+            if (!user.isActive()){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"Account is deactivated\"}");
+                return;
+            }
 
             // validate the token
             if (jwtService.isTokenValid(jwToken, userDetails)){
