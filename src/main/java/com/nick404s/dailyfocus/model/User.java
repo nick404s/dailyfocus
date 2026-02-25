@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(unique = true, length = 100, nullable = false) // used as username
+    @Column(unique = true, length = 100, nullable = false) // indexing(unique) the column because it used as a username
     private String email;
 
     @Column(nullable = false)
