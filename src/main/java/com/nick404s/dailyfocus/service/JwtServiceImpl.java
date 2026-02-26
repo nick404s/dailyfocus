@@ -20,7 +20,7 @@ public class JwtServiceImpl implements JwtService{
     // jwt values from the app properties
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
-    @Value("${sping.jwt.expiration}")
+    @Value("${spring.jwt.expiration}")
     private long JWT_EXPIRATION;
 
     @Override
@@ -44,8 +44,12 @@ public class JwtServiceImpl implements JwtService{
 
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        try {
+            final String username = extractUsername(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false; // return false in case of expired, malformed etc.
+        }
     }
 
     private boolean isTokenExpired(String token){
