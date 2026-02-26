@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl  implements AuthenticationService{
 
         // get the user
         User user = userRepository.findByEmail(authenticationRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 
         // create a jwt token for the user
         String jwToken = jwtService.generateToken(new HashMap<>(), user);
@@ -111,6 +111,4 @@ public class AuthenticationServiceImpl  implements AuthenticationService{
 
         return authorityList;
     }
-
-
 }
