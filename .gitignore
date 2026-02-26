@@ -19,6 +19,13 @@ target/
 *.iml
 *.ipr
 
+### OS
+.DS_Store
+
+### Environment Files
+.env
+application.properties
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
