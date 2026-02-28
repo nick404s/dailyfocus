@@ -34,7 +34,7 @@ class AuthenticatedUserProviderImplTest {
     @Test
     void getAuthenticatedUserAnonymousUserThrowsAccessDenied() {
         TestingAuthenticationToken auth =
-                new TestingAuthenticationToken("anonymousUser", null);
+                new TestingAuthenticationToken("anonymousUser", "");
         auth.setAuthenticated(false);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -51,7 +51,7 @@ class AuthenticatedUserProviderImplTest {
         user.setEmail("john@example.com");
 
         TestingAuthenticationToken auth =
-                new TestingAuthenticationToken(user, null);
+                new TestingAuthenticationToken(user, "");
         auth.setAuthenticated(true);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
@@ -63,10 +63,10 @@ class AuthenticatedUserProviderImplTest {
 
 
     @Test
-    void getAuthenticatedUserAuthenticatedButAnonymousStringhrowsAccessDenied() {
+    void getAuthenticatedUserAuthenticatedButAnonymousStringThrowsAccessDenied() {
         // principal is the string, but technically "authenticated"
         TestingAuthenticationToken auth =
-                new TestingAuthenticationToken("anonymousUser", null);
+                new TestingAuthenticationToken("anonymousUser", "");
         auth.setAuthenticated(true);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
