@@ -1,5 +1,6 @@
 package com.nick404s.dailyfocus.util;
 
+
 import com.nick404s.dailyfocus.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuthenticatedUserProviderImplTest {
+public class AuthenticatedUserProviderImplTest {
 
     private final AuthenticatedUserProviderImpl provider = new AuthenticatedUserProviderImpl();
 
@@ -61,10 +62,9 @@ class AuthenticatedUserProviderImplTest {
         assertEquals("john@example.com", result.getEmail());
     }
 
-
     @Test
     void getAuthenticatedUserAuthenticatedButAnonymousStringThrowsAccessDenied() {
-        // principal is the string, but technically "authenticated"
+        // Principal is the string, but technically "authenticated"
         TestingAuthenticationToken auth =
                 new TestingAuthenticationToken("anonymousUser", "");
         auth.setAuthenticated(true);
