@@ -111,6 +111,7 @@ public class AdminServiceImplTest {
         );
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assert ex.getReason() != null;
         assertTrue(ex.getReason().contains("User does not exist"));
     }
 
@@ -126,7 +127,10 @@ public class AdminServiceImplTest {
 
         assertEquals(2, response.getAuthorities().size());
         assertTrue(response.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(AppRoles.ROLE_ADMIN)));
+                .anyMatch(a -> {
+                    assert a.getAuthority() != null;
+                    return a.getAuthority().equals(AppRoles.ROLE_ADMIN);
+                }));
         verify(userRepository).save(user);
     }
 
@@ -140,6 +144,7 @@ public class AdminServiceImplTest {
         );
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assert ex.getReason() != null;
         assertTrue(ex.getReason().contains("User is an admin"));
     }
 
@@ -210,6 +215,7 @@ public class AdminServiceImplTest {
         );
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assert ex.getReason() != null;
         assertTrue(ex.getReason().contains("User is an admin"));
     }
 
